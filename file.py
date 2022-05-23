@@ -3,7 +3,7 @@
 """
 Copyright 2022. All rights reserved.
 """
-__version__ = "1.5"
+__version__ = "1.6"
 #def struct():import struct
 #def pickle():import pickle
 #def shelve():import shelve
@@ -44,6 +44,11 @@ def get_request_text_as_str(url):
 	for line in response:
 		text.append(line.rstrip())
 	return text
+def get_request_text_as_json(url,params=""):
+	import requests
+	resp = requests.get(url=url, params=params)
+	data = resp.json()
+	return data
 def write_text(path,text):
 	with open(path, 'w') as myfile: myfile.write(text)
 	"""myfile=open(path,'w')
@@ -102,3 +107,6 @@ def dirs_make(path):
 		#raise error
 		if check_dir(path): pass
 		else: print("Cannot create a directory '{}', path: '{}'".format(dir,path))
+	
+if __name__ == '__main__':
+	print(get_request_text_as_json("https://api.github.com/repos/babyish-retired0m/hostname_advanced_testing/contents/results3?ref=main"))
