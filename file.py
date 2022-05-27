@@ -3,7 +3,7 @@
 """
 Copyright 2022. All rights reserved.
 """
-__version__ = "1.6"
+__version__ = "1.7"
 #def struct():import struct
 #def pickle():import pickle
 #def shelve():import shelve
@@ -18,13 +18,15 @@ def open_as_str(path):
 	myfile.close()
 	return text
 def open_as_list(path):
-	return [x.rstrip() for x in open(path,'r').readlines()]
+	#return [x.rstrip() for x in open(path,'r').readlines()]
 	"""myfile=open(path,'r')
 	text=[]
 	for line in myfile:
 		text.append(line.rstrip())
 	myfile.close()
 	return text"""
+	with open(path,'r') as myfile: 
+		return list(map((lambda line: line.rstrip()), myfile))
 def open_as_dict(path):
 	myfile=open(path,'r')
 	text={}
@@ -54,6 +56,11 @@ def write_text(path,text):
 	"""myfile=open(path,'w')
 	myfile.write(text)
 	myfile.close()"""
+def write_list_as_text(path, list_text):
+	text = ""
+	for i in list_text:
+		text+= i + "\n"
+	with open(path, 'w') as myfile: myfile.write(text)
 def write_text_as_json(path,text):
 	import json
 	json.dump(text, fp=open(path+".json",'w'),indent=4)

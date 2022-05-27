@@ -2,8 +2,11 @@
 """
 Copyright 2022. All rights reserved.
 """
-__version__ = "1.1"
-import bcrypt
+__version__ = "1.2"
+try:
+	import bcrypt
+except ImportError:
+	raise SystemExit("Please install bcrypt, pip3 install bcrypt")
 import time
 import random
 def ran():
