@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-__version__ = "1.2"
+__version__ = "1.3"
 def get_ip_address_valid(address):
 	import ipaddress
 	try:
-		answer=ipaddress.ip_address(address)
+		answer = ipaddress.ip_address(address)
 		return True#print("appear to be an IPv4 or IPv6 address")
 	except Exception as error: return False#print("does not appear to be an IPv4 or IPv6 address")
 def get_ip_address():
@@ -61,12 +61,23 @@ def get_ip_address_public_ipify():
 	ip = get('https://api.ipify.org').text
 	#print('My public IP address is: {}'.format(ip))
 	return ip
-def get_ip_address_public_amazon():
-	from requests import get
-	try: return get('https://checkip.amazonaws.com').text.strip()
-	except:#import sys;#sys.exit(1)
-		print('The timeout error get_ip_address_public_amazon message has been received')
-		return None
+def get_ip_address_public_amazon(timeout = 10):
+	import requests
+	while True:
+		try:
+			return requests.get('https://checkip.amazonaws.com').text.strip()
+		except:#import sys;#sys.exit(1)
+			#print("The timeout error get_ip_address_public_amazon message has been received")
+			#return None
+			if timeout == 0:
+				print("{}Check your internet connection{}".format(utility.Clr.RED2, utility.Clr.RST2))
+				break				 
+			else:
+				print("{}Check your internet connection{}, timeout 10 seconds, timeout #".format(utility.Clr.BLUE2, utility.Clr.RST2), timeout)
+				time.sleep(10)
+				timeout -= 1
+				get_ip_address_public_amazon(timeout)
+				#sys.exit(1)
 def check_ip_in_network(ip_address,ip_network):
 	import ipaddress
 	if ipaddress.ip_address(ip_address) in ipaddress.ip_network(ip_network): return True

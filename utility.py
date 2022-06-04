@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-__version__ = "1.1"
+__version__ = "1.2"
 def getpcname():
 	from os import environ
 	from platform import node
@@ -57,10 +57,8 @@ class Clr:
     BLUE2 = '\033[46m'
     GREY2 = '\033[47m'
 def Percents(iter,L):
-	u=100/L
-	u=round(u,1)
-	k=iter*u
-	lo=list(range(0,100,1))
+	k = iter * round(100/L,1)
+	lo = list(range(0,100,1))
 	if k in lo:
 		print("{0}{2} percents{1}".format(Clr.RED2,Clr.RST2,lo[lo.index(k)]))
 def get_unix_time(): 

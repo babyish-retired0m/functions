@@ -33,7 +33,7 @@ class Clr:
 #logger= paramiko.util.logging.getLogger()
 #logger.setLevel(logging.WARNING)
 class Connect():
-	def __init__(self, host,port,username,password,pkey_path,pkey_password,log=False):
+	def __init__(self, host,port,username,password,pkey_path,pkey_password,log=True):
 		self.host=host
 		self.port=port
 		self.username=username
@@ -41,6 +41,12 @@ class Connect():
 		self.pkey_path=pkey_path
 		self.pkey_password=pkey_password
 		self.recv_status = "False"#exec_command
+		print("host=",host)
+		print("port=",port)
+		print("username=",username)
+		print("password=",password)
+		print("pkey_password=",pkey_password)
+		print("pkey_path=",pkey_path)
 		if log:
 			logging.basicConfig()
 			#self.logger=logging.getLogger('paramiko')
@@ -57,10 +63,25 @@ class Connect():
 		# To avoid an "unknown hosts" error. Solve this differently if you must...
 		ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 		if self.pkey_path is not None:
-			#print("This mechanism uses a private key.")
+			print("This mechanism uses a private key.")
 			# This mechanism uses a private key.
 			self.pkey = paramiko.RSAKey.from_private_key_file(self.pkey_path,self.pkey_password)
-			ssh_client.connect(hostname=self.host,username=self.username,pkey=self.pkey,disabled_algorithms=dict(pubkeys=["rsa-sha2-512", "rsa-sha2-256"]))
+			#self.pkey = paramiko.DSSKey.from_private_key_file(self.pkey_path,self.pkey_password)
+			"""if self.pkey_password is not None:
+				print("This mechanism uses a private key password:",self.pkey_password)
+				print("self.pkey_path=",self.pkey_path)
+				print("self.pkey_password=",self.pkey_password)
+				self.pkey = paramiko.RSAKey.from_private_key_file(self.pkey_path, self.pkey_password)
+				print("self.pkey",self.pkey)
+			else:
+				print("This mechanism uses a private key None password.")
+				self.pkey = paramiko.RSAKey.from_private_key_file(self.pkey_path)"""
+			ssh_client.connect(
+								hostname=self.host,
+								username=self.username,
+								pkey=self.pkey,
+								#disabled_algorithms=dict(pubkeys=["rsa-sha2-512", "rsa-sha2-256"])
+								)
 		elif self.password is None:
 			print("Password is None, username:",self.username[:5]+"...",end=" ")
 			ssh_client.connect(hostname=self.host,username=self.username,password="")
@@ -120,3 +141,30 @@ class Connect():
 		sftp.put(localpath, remotepath)
 		if sftp: sftp.close()
 		if ssh_client: ssh_client.close()
+if __name__ == '__main__':
+	import json
+	import os
+	import paramiko_ssh
+	connect_configuration = json.load(open("/Users/jozbox/python/mikrotik_cli_api/configuration/connect_configuration.txt"))
+	#print(connect_configuration)
+	connect_conf = connect_configuration["connect_private_key"]
+	#print(connect_conf)
+	host, port = connect_conf["host"], connect_conf["port"]
+	username, password = connect_conf["username"], connect_conf["password"]
+	pkey_path = connect_conf["pkey_path"]
+	pkey_password = connect_conf["pkey_password"]
+	host = "192.168.88.1"
+	port = "22"
+	username = "admin"
+	password = "admin"
+	pkey_path = None
+	pkey_password = None
+	username = "example.lan"
+	password = "example.lan"
+	pkey_path = "/Users/jozbox/python/openssl_cli_api/results/example.lan/2022-06-02_16-09-19_bit_2048_days_256/example.lan_RSA.key.pem"
+	#pkey_path = "/Users/jozbox/python/openssl_cli_api/results/example.lan/2022-06-02_16-09-19_bit_2048_days_256/example.lan_copy_RSA.key"
+	#pkey_path = "/Users/jozbox/python/openssl_cli_api/results/example.lan/2022-06-02_16-09-19_bit_2048_days_256/example.lan_copy.key"
+	#pkey_path = "/Users/jozbox/python/openssl_cli_api/results/example.lan/2022-06-02_16-09-19_bit_2048_days_256/example.lan_copy.key.pem"
+	pkey_password = "142b1404147qDyY8IN97x2r7l6.2SD7uuTfC82Qj9m6ggedaY.m5fQ.cF4AAxBe"
+	Client=paramiko_ssh.Connect(host=host, port=port, username=username, password=password, pkey_path=pkey_path, pkey_password=pkey_password, log = True)
+	Client.get_ssh_client(":beep frequency=5000 length=100ms")
