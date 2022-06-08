@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-__version__ = "1.3"
+__version__ = "1.4"
+	
+File = file.Main(print_result=False)
+
 def get_ip_address_valid(address):
 	import ipaddress
 	try:
@@ -87,7 +90,7 @@ def check_ip_in_networks(ip_address,ip_network_list):
 def check_ip_in_network_lanet_ua():
 	import file
 	ip_address=get_ip_address_public_amazon()
-	ip_network_list=file.open_as_list("/Users/johndoe/python/functions/ip_addresses_block_Provider_AS-39608_lanet.ua.txt")
+	ip_network_list=File.open_as_list("/Users/johndoe/python/functions/ip_addresses_block_Provider_AS-39608_lanet.ua.txt")
 	ip_network=check_ip_in_networks(ip_address,ip_network_list)
 	if ip_network: return ip_network
 if __name__ == '__main__':
@@ -104,8 +107,8 @@ if __name__ == '__main__':
 	import file
 	ip_address=get_ip_address_public_amazon()
 	#ip_address="176.37.51.215"
-	#ip_network_list=file.open_as_list("/Users/johndoe/python/functions/ip_addresses_block_Provider_AS-9009_m247.com.txt")
-	#ip_network_list=file.open_as_list("/Users/johndoe/python/functions/ip_addresses_block_Provider_AS-39608_lanet.ua.txt")
-	ip_network_list=file.open_as_list("/Users/johndoe/python/functions/ip_addresses_block_Provider_AS-42831_ukservers.com.txt")
+	#ip_network_list=File.open_as_list("/Users/johndoe/python/functions/ip_addresses_block_Provider_AS-9009_m247.com.txt")
+	#ip_network_list=File.open_as_list("/Users/johndoe/python/functions/ip_addresses_block_Provider_AS-39608_lanet.ua.txt")
+	ip_network_list=File.open_as_list("/Users/johndoe/python/functions/ip_addresses_block_Provider_AS-42831_ukservers.com.txt")
 	if check_ip_in_networks(ip_address,ip_network_list): print(ip_address)
 	print(check_ip_in_network_lanet_ua())
